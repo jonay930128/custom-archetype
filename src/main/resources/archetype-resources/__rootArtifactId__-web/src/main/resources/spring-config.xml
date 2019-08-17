@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+	    http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop.xsd
+	    http://www.springframework.org/schema/tx      http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc     http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+
+>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="1"/>
+        <property name="locations">
+            <list>
+                <value>classpath:common.properties</value>
+                <value>classpath:important.properties</value>
+                <value>classpath:env-config-${profiles.active}.properties</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 启用基于注释的事务行为配置 -->
+    <tx:annotation-driven transaction-manager="txManager"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="xxx"/>
+    <aop:aspectj-autoproxy/>
+    <mvc:annotation-driven/>
+
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="txManager"></property>
+        <property name="propagationBehavior" value="0"></property>
+    </bean>
+
+
+
+    <import resource="classpath*:spring-config-datasource.xml"/>
+    <import resource="classpath*:spring-config-dao.xml"/>
+
+</beans>

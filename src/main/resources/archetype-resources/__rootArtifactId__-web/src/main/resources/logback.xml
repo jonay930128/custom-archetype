@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${yanfa03.log.ConversionPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOGGER-DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${yanfa03.log.path}/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${yanfa03.log.path}/debug.log.%d{yyyy-w}</fileNamePattern>
+            <maxHistory>${yanfa03.log.maxHistory}</maxHistory>
+            <totalSizeCap>${yanfa03.log.totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${yanfa03.log.ConversionPattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="LOGGER-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${yanfa03.log.path}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${yanfa03.log.path}/info.log.%d{yyyy-w}</fileNamePattern>
+            <maxHistory>${yanfa03.log.maxHistory}</maxHistory>
+            <totalSizeCap>${yanfa03.log.totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${yanfa03.log.ConversionPattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <appender name="LOGGER-ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${yanfa03.log.path}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${yanfa03.log.path}/error.log.%d{yyyy-w}</fileNamePattern>
+            <maxHistory>${yanfa03.log.maxHistory}</maxHistory>
+            <totalSizeCap>${yanfa03.log.totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${yanfa03.log.ConversionPattern}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="LOGGER-SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${yanfa03.log.path}/sqlmap.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${yanfa03.log.path}/sqlmap.log.%d{yyyy-w}</fileNamePattern>
+            <maxHistory>${yanfa03.log.maxHistory}</maxHistory>
+            <totalSizeCap>${yanfa03.log.totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${yanfa03.log.ConversionPattern}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- sqlmap -->
+    <!-- sql日志不打印在控制台，sql相关出错日志需要记录到error.log文件中-->
+    <logger name="org.apache.ibatis" additivity="false" level="TRACE">
+        <appender-ref ref="LOGGER-SQL"/>
+        <appender-ref ref="LOGGER-ERROR"/>
+    </logger>
+    <logger name="org.mybatis" additivity="false" level="TRACE">
+        <appender-ref ref="LOGGER-SQL"/>
+        <appender-ref ref="LOGGER-ERROR"/>
+    </logger>
+
+
+    <root level="${yanfa03.log.level}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOGGER-DEBUG"/>
+        <appender-ref ref="LOGGER-INFO"/>
+        <appender-ref ref="LOGGER-ERROR"/>
+    </root>
+</configuration>
